@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.card{
+    @apply flex-1 w-1/5 h-2/3   border  bg-blue-400 rounded-lg shadow-lg 
+}

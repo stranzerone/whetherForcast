@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather Forecast</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <style>
+    .bg-blur {
+      backdrop-filter: blur(10px);
+      background-image: url("https://wallpaperaccess.com/full/1359011.jpg");
+      background-size: cover;
+      background-position: center;
+     height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body class="bg-blur flex items-center justify-center min-h-screen text-white">
+
+  <div class="h-screen w-full flex flex-col bg-black bg-opacity-50 p-4 rounded-xl shadow-2xl">
+    <!-- Search bar -->
+    <div class="w-full flex justify-center mb-4">
+      <input type="text" id="cityInput" placeholder="Enter city name" class="w-2/3 p-2 rounded-lg text-black">
+      <button onclick="getWeatherByCity()"  class="ml-2 p-2 opacity-70 bg-slate-700 rounded-lg shadow-lg"><i class="fa-solid text-white fa-magnifying-glass opacity-100"></i></button>
+      <button onclick="getCurrentLocationWeather()" class="ml-2 p-2 bg-white text-black font-bold rounded-lg shadow-lg"><i class="fa-solid fa-location-crosshairs"></i> Detect</button>
+    </div>
+    
+    <!-- Today's weather card -->
+    <div id="todayWeather" class="h-2/3 w-full flex items-center justify-center bg-transparent text-white relative">
+      <div class="w-[30vw] h-[60vh] text-center opacity-90 bg-transparent bg-opacity-90 rounded-xl shadow-lg flex flex-col items-center justify-center space-y-4 p-4">
+        <h1 id="currentTemp" class="text-6xl font-bold">--°C</h1>
+        <p id="currentWeather" class="text-xl">--</p>
+        <div class="flex items-center justify-center space-x-2">
+          <p><i class="fas fa-tint"></i> <span id="currentHumidity">--</span>%</p>
+          <p><i class="fas fa-wind"></i> <span id="currentWind">--</span> km/h</p>
+          <p><i class="fas fa-tachometer-alt"></i> <span id="currentPressure">--</span> hPa</p>
+        </div>
+        <img id="currentIcon" src="" alt="Weather Icon" class="w-16 h-16 mt-2">
+        <p>  <i class="fa-solid fa-location-dot"></i> <span id="currentCity">Pune</span></p>
+
+      </div>
+    </div>
+
+    <!-- 4 days forecast cards -->
+    <div id="forecast" class="h-1/3 w-full flex justify-around items-center space-x-4 mt-4">
+      <!-- Forecast cards will be appended here -->
+    </div>
+  </div>
+
+  <script>
+    const apiKey = '8a349082bb2fea1bde1af9894c251850';
+
+    function getWeatherByCity() {
+      const city = document.getElementById('cityInput').value || 'pune';
+     
+      fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data) {
+            console.log(data);
+            displayWeather(data);
+          } else {
+            console.log(data)
+            alert('City not found');
+          }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    }
+
+    function getCurrentLocationWeather() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${apiKey}`)
+            .then(response => response.json())
+            .then(data => {
+              console.log(data);
+              displayWeather(data);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+        });
+      } else {
+        alert('Geolocation is not supported by this browser.');
+      }
+    }
+
+    function displayWeather(data) {
+      document.getElementById('currentTemp').innerText = `${data.main.temp}°C`;
+      document.getElementById('currentWeather').innerText = data.weather[0].description;
+      document.getElementById('currentHumidity').innerText = data.main.humidity;
+      document.getElementById('currentPressure').innerText = data.main.pressure;
+      document.getElementById('currentWind').innerText = data.wind.speed;
+      document.getElementById('currentCity').innerHTML = data.name
+
+      const iconId = data.weather[0].icon;
+      const iconUrl = `http://openweathermap.org/img/wn/${iconId}.png`;
+      document.getElementById('currentIcon').src = iconUrl;
+
+      // Fetch forecast for the next 4 days
+      const cityId = data.id;
+    
+      fetch(`https://api.openweathermap.org/data/2.5/forecast?id=${cityId}&units=metric&appid=${apiKey}`)
+        .then(response => response.json())
+        .then(data => {
+          const forecastContainer = document.getElementById('forecast');
+          forecastContainer.innerHTML = '';
+
+          const slicedData = data.list.slice(0, 4); // Next 4 entries for the forecast
+          slicedData.forEach((weather, index) => {
+            const card = document.createElement('div');
+            card.classList.add('card', 'bg-transparent', 'bg-opacity-70', 'text-center', 'w-[20vw]', 'h-[100%]', 'rounded-xl', 'shadow-lg', 'flex', 'items-center', 'justify-center', 'p-4');
+            card.innerHTML = `
+              <div>
+               
+                <h2 class="text-2xl font-semibold">${new Date(weather.dt * 1000).toLocaleDateString('en-US', { weekday: 'short' })}</h2>
+               <div class='flex'> 
+                <div>
+                                    <img src="http://openweathermap.org/img/wn/${weather.weather[0].icon}.png" alt="Weather Icon" class="w-12 h-12 mx-auto">
+
+                </div>
+                <div>
+                                    <p class="text-lg">${weather.main.temp}°C</p>
+                                  <p class="text-sm">${weather.weather[0].description}</p>
+
+                </div>
+                
+                </div>
+              </div>
+            `;
+            forecastContainer.appendChild(card);
+          });
+        })
+        .catch(error => console.error('Error fetching forecast:', error));
+    }
+
+    // Initial load with a default city
+    getWeatherByCity();
+  </script>
+
+</body>
+</html>

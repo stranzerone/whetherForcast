@@ -1,0 +1,11 @@
+{
+  "name": "my-portfolio",
+  "version": "1.0.0",
+  "scripts": {
+    "build:css": "tailwindcss build src/styles.css -o public/styles.css",
+    "watch:css": "tailwindcss build src/styles.css -o public/styles.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.0.0"
+  }
+}
