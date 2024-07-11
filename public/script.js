@@ -1,19 +1,75 @@
 const apiKey = '8a349082bb2fea1bde1af9894c251850';
 
 const LoadingError = document.querySelector("#forecast");
+const dropDown = document.querySelector('#dropDown');
+
+document.querySelector('#cityInput').addEventListener('focus', () => {
+  const loadCities = JSON.parse(localStorage.getItem('recentCities')) || [];
+  const dropBox = document.createElement('div');
+  dropBox.id = 'dropBox';
+  dropBox.classList.add('absolute', 'bg-slate-900', 'max-h-[40vh]','h-auto', 'py-3', 'w-[70vw]','overflow-y-scroll','scroll-w-hidden');
+  
+  // Clear previous content
+  dropBox.innerHTML = '';
+
+  loadCities.forEach((city, index) => {
+    const cityOption = document.createElement('div');
+    cityOption.id = `city-${index}`;
+    cityOption.classList.add('py-2', 'px-4', 'cursor-pointer', 'hover:bg-slate-400');
+    cityOption.innerText = city;
+    cityOption.addEventListener('click', () => {
+      document.querySelector('#cityInput').value = city;
+      getWeatherByCity();
+    });
+    dropBox.appendChild(cityOption);
+  });
+
+  // Append the dropBox to dropDown
+  dropDown.innerHTML = ''; // Clear previous dropBox if exists
+  dropDown.appendChild(dropBox);
+});
+
+
+
+function addCityToLocalStorage(city) {
+  let cities = JSON.parse(localStorage.getItem('recentCities')) || [];
+  if (!cities.includes(city)) {
+    cities.push(city);
+    localStorage.setItem('recentCities', JSON.stringify(cities));
+  }
+}
+
+
+
+
+
+
+
+
+
 
 function getWeatherByCity() {
   const city = document.getElementById('cityInput').value || 'pune';
 
+addCityToLocalStorage(city)
+
+  dropDown.innerHTML = ''
+ if(city != ''){
+  dropDown.classList.add('block')
+ }else{
+dropDown.classList.add('hidden')
+ }
   fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`)
     .then(response => response.json())
     .then(data => {
       if (data.cod !== 200) {
-        console.log(data);
+        
         LoadingError.innerHTML = data.message;
       } else {
-        console.log(data);
+      
+        document.getElementById('cityInput').value = ''
         displayWeather(data);
+        
       }
     })
     .catch(error => {
@@ -23,6 +79,7 @@ function getWeatherByCity() {
 }
 
 function getCurrentLocationWeather() {
+  dropDown.innerHTML = ''
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
       const lat = position.coords.latitude;

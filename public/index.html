@@ -21,16 +21,26 @@
 
   <div class="w-full max-w-5xl flex flex-col bg-black bg-opacity-50 p-4 rounded-xl shadow-2xl">
     <!-- Search bar -->
-    <div class="w-full flex flex-row sm:flex-row justify-center mb-4  sm:space-y-0 sm:space-x-2">
-      <input type="text" id="cityInput" placeholder="Enter city name" class="w-full h-10 sm:w-2/2 p-2 rounded-lg text-black bg-transparent border border-slate-400">
-      <div class="flex space-x-1">
-        <button onclick="getWeatherByCity()" class="p-2 opacity-70 h-10 bg-slate-700 rounded-lg shadow-lg"><i class="fa-solid text-white fa-magnifying-glass opacity-100"></i></button>
-        <button onclick="getCurrentLocationWeather()" class="p-2  h-10 bg-white text-black font-bold rounded-lg shadow-lg"><i class="fa-solid fa-location-crosshairs"></i> </button>
+     <div>
+
+      <div class="w-full flex flex-row sm:flex-row justify-center mb-4  sm:space-y-0 sm:space-x-2">
+        <input type="text" id="cityInput" placeholder="Enter city name" class="w-full h-10 sm:w-2/2 p-2 text-white rounded-lg  bg-transparent border border-slate-400">
+        <div class="flex space-x-1">
+          <button onclick="getWeatherByCity()" class="p-2 opacity-70 h-10 bg-slate-700 rounded-lg shadow-lg"><i class="fa-solid text-white fa-magnifying-glass opacity-100"></i></button>
+          <button onclick="getCurrentLocationWeather()" class="p-2  h-10 bg-white text-black font-bold rounded-lg shadow-lg"><i class="fa-solid fa-location-crosshairs"></i> </button>
+        </div>
+       
       </div>
-    </div>
+   <div id="dropDown">
+
+   </div>
+
+
+     </div>
+   
     
     <!-- Today's weather card -->
-    <div id="todayWeather" class="w-full flex items-center justify-center bg-transparent text-white mb-4">
+    <div id="todayWeather" class="w-full flex items-center justify-center bg-transparent text-white mb-4 ">
       <div class="w-full sm:w-2/3 lg:w-1/3 h-auto text-center opacity-90 bg-transparent bg-opacity-90 rounded-xl shadow-lg flex flex-col items-center justify-center space-y-4 p-4">
         <h1 id="currentTemp" class="text-6xl font-bold">--°C</h1>
         <p id="currentWeather" class="text-xl">--</p>
