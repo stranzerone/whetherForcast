@@ -76,10 +76,10 @@ function displayWeather(data) {
       const slicedData = data.list.slice(0, 4); // Next 4 entries for the forecast
       slicedData.forEach((weather, index) => {
         const card = document.createElement('div');
-        card.classList.add('card', 'bg-transparent', 'bg-opacity-70', 'text-center', 'w-full', 'md:w-[20vw]', 'h-[100%]', 'rounded-xl', 'shadow-lg', 'flex', 'items-center', 'justify-center', 'p-4');
+        card.classList.add('card', 'bg-transparent', 'bg-opacity-70', 'text-center', 'w-full', 'md:w-[45vw]','lg:w-[20vw]', 'h-[100%]', 'rounded-xl', 'shadow-lg', 'flex', 'items-center', 'justify-center', 'p-4');
         card.innerHTML = `
-          <div>
-            <div class='flex flex-col md:flex-row gap-5 border border-gray-100 p-3 rounded-lg'>
+          <div class='flex-1 text-sm'>
+            <div class='flex flex-col md:flex-row justify-around border border-gray-100 p-3 rounded-lg'>
               <div>
                 <p class="text-lg">${weather.main.temp}°C</p>
                 <img src="http://openweathermap.org/img/wn/${weather.weather[0].icon}.png" alt="Weather Icon" class="w-12 h-12 mx-auto">
